@@ -1,0 +1,44 @@
+{{!
+    This file is part of the tool_certificate plugin for Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_coursecertificate/mobile_view_page
+
+    Template for showing list of certificate issues in the mobile app.
+
+    Example context (json):
+    {
+        "certificates": [],
+        "hascertificates": "true"
+    }
+}}
+{{=<% %>=}}
+
+<ion-item class="ion-text-wrap">
+    <ion-label>
+        <p>{{ 'plugin.tool_certificate.mycertificatesdescription' | translate }}</p>
+    </ion-label>
+</ion-item>
+
+<%#hascertificates%>
+<ion-list>
+    TO DO
+</ion-list>
+<%/hascertificates%>
+
+<%^hascertificates%>
+<core-empty-box message="{{ 'plugin.tool_certificate.nothingtodisplay' | translate }}" icon="fas-medal" />
+<%/hascertificates%>
