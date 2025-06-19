@@ -38,7 +38,7 @@ class mobile {
 
         $user = \core_user::get_user($args->userid ?: $USER->id, '*', MUST_EXIST);
         if (!\tool_certificate\permission::can_view_list($user->id)) {
-            throw new \required_capability_exception(context_system::instance(), 'tool/certificate:viewallcertificates',
+            throw new \required_capability_exception(\context_system::instance(), 'tool/certificate:viewallcertificates',
                 'nopermission', 'error');
         }
 
@@ -74,9 +74,11 @@ class mobile {
      * @return array       HTML, javascript and otherdata
      */
     public static function mobile_my_certificates_init(array $args): array {
+        global $CFG;
+
         return [
             'templates' => [],
-            'javascript' => '',
+            'javascript' => file_get_contents($CFG->dirroot . '/admin/tool/certificate/mobileapp/js/mycertificates_init.js'),
             'restrict' => [
                 'courses' => [SITEID],
             ],
