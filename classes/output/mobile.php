@@ -36,14 +36,22 @@ class mobile {
 
         $args = (object) $args;
 
-        // @todo: Check permissions and capabilities.
+        $user = \core_user::get_user($args->userid ?: $USER->id, '*', MUST_EXIST);
+        if (!\tool_certificate\permission::can_view_list($user->id)) {
+            throw new \required_capability_exception(context_system::instance(), 'tool/certificate:viewallcertificates',
+                'nopermission', 'error');
+        }
 
-        // @todo: Obtain list of certificates.
+        // @todo: Obtain list of certificates. You can see the fields needed in the mobile_my_certificates_page template.
+        // Make sure to apply \core_external\util::format_string to name and coursename.
         $certificates = [];
 
         $data = [
             'certificates' => $certificates,
             'hascertificates' => !empty($certificates),
+            'canverify' => \tool_certificate\permission::can_verify(),
+            // @todo: Calculate showshareonlinkedin using the config, like it's done in get_shareonlinkedincerturl.
+            'showshareonlinkedin' => 0,
         ];
 
         return [

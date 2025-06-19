@@ -15,14 +15,29 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template mod_coursecertificate/mobile_view_page
+    @template tool_certificate/mobile_my_certificates_page
 
     Template for showing list of certificate issues in the mobile app.
 
     Example context (json):
     {
-        "certificates": [],
-        "hascertificates": "true"
+        "certificates": [
+            {
+                id: 1,
+                name: 'First Certificate',
+                coursename: 'Course 1',
+                timecreated: 1747297694,
+                expires: 0,
+                isexpired: false,
+                code: '1234567890AB',
+                verifyurl: 'https://example.com/admin/tool/certificate/index.php?code=1234567890AB',
+                fileurl: 'https://example.com/pluginfile.php/1/tool_certificate/issues/1747297694/1234567890AB.pdf',
+                shareurl: 'https://www.linkedin.com/...',
+            },
+        ],
+        "hascertificates": "true",
+        "canverify": "true",
+        "showshareonlinkedin": "true"
     }
 }}
 {{=<% %>=}}
@@ -34,9 +49,130 @@
 </ion-item>
 
 <%#hascertificates%>
-<ion-list>
-    TO DO
-</ion-list>
+<!-- Phone view. -->
+<ion-accordion-group class="ion-hide-md-up tool-certificate-mycertificates-mobile">
+    <%#certificates%>
+    <ion-accordion role="item" value="tool-certificate-<% id %>" toggle-icon-slot="start" class="tool-certificate-my-item">
+        <ion-item class="ion-text-wrap divider" slot="header">
+            <ion-label>
+                <p class="item-heading"><% name %><%#coursename%> - <% coursename %><%/coursename%></p>
+            </ion-label>
+        </ion-item>
+        <div slot="content">
+            <ion-item-group>
+                <ion-item class="ion-text-wrap">
+                    <ion-label>
+                        <p class="item-heading">{{ 'plugin.tool_certificate.issueddate' | translate }}</p>
+                        <p>{{ <% timecreated %> * 1000 | coreFormatDate }}</p>
+                    </ion-label>
+                </ion-item>
+                <ion-item class="ion-text-wrap">
+                    <ion-label>
+                        <p class="item-heading">{{ 'plugin.tool_certificate.expirydate' | translate }}</p>
+                        <%#expires%>
+                        <p>{{ <% expires %> * 1000 | coreFormatDate }}</p>
+                        <%/expires%>
+                        <%^expires%>
+                        <p>{{ 'plugin.tool_certificate.never' | translate }}</p>
+                        <%/expires%>
+                    </ion-label>
+                    <%#isexpired%>
+                    <ion-badge slot="end" color="danger">
+                        {{ 'plugin.tool_certificate.expired' | translate }}
+                    </ion-badge>
+                    <%/isexpired%>
+                </ion-item>
+                <%#canverify%>
+                <ion-item class="ion-text-wrap">
+                    <ion-label>
+                        <p class="item-heading">{{ 'plugin.tool_certificate.code' | translate }}</p>
+                        <p>
+                            <a href="<% verifyurl %>" title="{{ 'plugin.tool_certificate.verify' | translate }}" core-link
+                                [showBrowserWarning]="false"><% code %></a>
+                        </p>
+                    </ion-label>
+                </ion-item>
+                <%/canverify%>
+            </ion-item-group>
+            <ion-button class="ion-margin" expand="block" [core-download-file]="{ fileurl: '<% fileurl %>' }">
+                <ion-icon slot="start" name="fas-download" aria-hidden="true" />
+                {{ 'plugin.tool_certificate.view' | translate }}
+            </ion-button>
+            <%#showshareonlinkedin%>
+            <ion-button class="ion-margin" fill="outline" expand="block" href="<% shareurl %>" core-link
+                [showBrowserWarning]="false">
+                <ion-icon slot="start" name="fas-share-nodes" aria-hidden="true" />
+                {{ 'plugin.tool_certificate.shareonlinkedin' | translate }}
+            </ion-button>
+            <%/showshareonlinkedin%>
+        </div>
+    </ion-accordion>
+    <%/certificates%>
+</ion-accordion-group>
+
+<!-- Tablet view. -->
+<ion-grid role="grid" class="ion-hide-md-down tool-certificate-mycertificates-tablet">
+    <!-- Header of the table -->
+    <ion-row role="row">
+        <ion-col role="columnheader" class="ion-text-center">{{ 'plugin.tool_certificate.name' | translate }}</ion-col>
+        <ion-col role="columnheader" class="ion-text-center">{{ 'plugin.tool_certificate.issueddate' | translate }}</ion-col>
+        <ion-col role="columnheader" class="ion-text-center">{{ 'plugin.tool_certificate.expirydate' | translate }}</ion-col>
+        <%#canverify%>
+        <ion-col role="columnheader" class="ion-text-center">{{ 'plugin.tool_certificate.code' | translate }}</ion-col>
+        <%/canverify%>
+        <ion-col role="columnheader" class="ion-text-center">{{ 'plugin.tool_certificate.file' | translate }}</ion-col>
+        <%#showshareonlinkedin%>
+        <ion-col role="columnheader" class="ion-text-center">{{ 'plugin.tool_certificate.shareonlinkedin' | translate }}</ion-col>
+        <%/showshareonlinkedin%>
+    </ion-row>
+
+    <!-- List of certificates -->
+    <%#certificates%>
+        <ion-row role="row">
+            <ion-col role="gridcell" class="ion-justify-content-center ion-text-center">
+                <% name %><%#coursename%> - <% coursename %><%/coursename%>
+            </ion-col>
+            <ion-col role="gridcell" class="ion-justify-content-center ion-text-center">
+                {{ <% timecreated %> * 1000 | coreFormatDate }}
+            </ion-col>
+            <ion-col role="gridcell" class="ion-justify-content-center ion-text-center">
+                <%#expires%>
+                <p>
+                    {{ <% expires %> * 1000 | coreFormatDate }}
+                    <%#isexpired%>
+                    <ion-badge color="danger">
+                        {{ 'plugin.tool_certificate.expired' | translate }}
+                    </ion-badge>
+                    <%/isexpired%>
+                </p>
+                <%/expires%>
+                <%^expires%>
+                <p>{{ 'plugin.tool_certificate.never' | translate }}</p>
+                <%/expires%>
+            </ion-col>
+            <%#canverify%>
+            <ion-col role="gridcell" class="ion-justify-content-center ion-text-center">
+                <a href="<% verifyurl %>" title="{{ 'plugin.tool_certificate.verify' | translate }}" core-link
+                    [showBrowserWarning]="false"><% code %></a>
+            </ion-col>
+            <%/canverify%>
+            <ion-col role="gridcell" class="ion-justify-content-center ion-text-center">
+                <ion-button class="ion-margin" [attr.aria-label]="'plugin.tool_certificate.view' | translate" fill="outline"
+                    [core-download-file]="{ fileurl: '<% fileurl %>' }">
+                    <ion-icon slot="icon-only" name="fas-download" aria-hidden="true" />
+                </ion-button>
+            </ion-col>
+            <%#showshareonlinkedin%>
+            <ion-col role="gridcell" class="ion-justify-content-center ion-text-center">
+                <ion-button class="ion-margin" [attr.aria-label]="'plugin.tool_certificate.shareonlinkedin' | translate"
+                    fill="outline" href="<% shareurl %>" core-link [showBrowserWarning]="false">
+                    <ion-icon slot="icon-only" name="fas-share-nodes" aria-hidden="true" />
+                </ion-button>
+            </ion-col>
+            <%/showshareonlinkedin%>
+        </ion-row>
+    <%/certificates%>
+</ion-grid>
 <%/hascertificates%>
 
 <%^hascertificates%>
