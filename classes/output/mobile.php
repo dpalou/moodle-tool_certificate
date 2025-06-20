@@ -32,7 +32,7 @@ class mobile {
      * @return array       HTML, javascript and otherdata
      */
     public static function mobile_my_certificates_view(array $args): array {
-        global $OUTPUT, $CFG;
+        global $OUTPUT, $CFG, $USER;
 
         $args = (object) $args;
 
@@ -52,7 +52,20 @@ class mobile {
             'canverify' => \tool_certificate\permission::can_verify(),
             // @todo: Calculate showshareonlinkedin using the config, like it's done in get_shareonlinkedincerturl.
             'showshareonlinkedin' => 0,
+            'iscurrentuser' => $user->id === $USER->id,
         ];
+
+        if (!$data['iscurrentuser']) {
+            // Viewing another user's certificates, include the user details to be able to display them.
+            require_once($CFG->dirroot . '/user/lib.php');
+
+            $userdetails = user_get_user_details($user, null, ['fullname', 'firstname', 'lastname', 'profileimageurl']);
+            $data['userid'] = $user->id;
+            $data['userfullname'] = $userdetails['fullname'];
+            $data['userfirstname'] = $userdetails['firstname'];
+            $data['userlastname'] = $userdetails['lastname'];
+            $data['userpictureurl'] = $userdetails['profileimageurl'];
+        }
 
         return [
             'templates' => [

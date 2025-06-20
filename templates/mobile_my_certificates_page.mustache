@@ -37,10 +37,28 @@
         ],
         "hascertificates": "true",
         "canverify": "true",
-        "showshareonlinkedin": "true"
+        "showshareonlinkedin": "true",
+        "iscurrentuser": "false",
+        "userid": 2,
+        "userpictureurl": "https://example.com/pluginfile.php/25/user/icon/boost/f1?rev=8466",
+        "userfullname": "John Doe",
+        "userfirstname": "John",
+        "userlastname": "Doe"
     }
 }}
 {{=<% %>=}}
+
+<%^iscurrentuser%>
+<ion-card>
+    <ion-item class="ion-text-wrap">
+        <core-user-avatar slot="start" [user]="{ userid: <% userid %>, userpictureurl: '<% userpictureurl %>',
+            fullname: '<% userfullname %>', firstname: '<% userfirstname %>', lastname: '<% userlastname %>' }" />
+        <ion-label>
+            <p class="item-heading"><% userfullname %></p>
+        </ion-label>
+    </ion-item>
+</ion-card>
+<%/iscurrentuser%>
 
 <ion-item class="ion-text-wrap">
     <ion-label>
